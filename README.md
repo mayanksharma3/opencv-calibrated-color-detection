@@ -4,7 +4,7 @@ Tracks multiple colors based on colors you calibrate beforehand
 
 ### Setup
 
-1. Clone this repo: `git clone https://...`
+1. Clone this repo: `git clone https://github.com/mayanksharma3/opencv-calibrated-color-detection.git`
 2. Install OpenCV: `pip install opencv-python`
 
 ### Calibrating Colors
