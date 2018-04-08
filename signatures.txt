@@ -1,0 +1,1 @@
+[{'color': 'Orange', 'bounds': ['[ 18  37 111]', '[153 170 207]']}, {'color': 'Blue', 'bounds': ['[116  49  17]', '[235 134  46]']}, None, None, None, None, None, None, None, None]
