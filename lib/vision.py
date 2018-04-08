@@ -7,10 +7,9 @@ import ast
 
 
 class Vision(object):
-	def __init__(self, signature_filepath, camera_index=0):
-		self.sig_file = open("../" + signature_filepath, "r")
+	def __init__(self, sig_file, camera_index=0):
 		self.camera = cv2.VideoCapture(camera_index)
-		self.color_info = ast.literal_eval(self.sig_file.readline())
+		self.color_info = ast.literal_eval(sig_file.readline())
 		self.colors = len(self.color_info)
 
 	def get_color_info(self, show_feed=True, show_max=True, shape="rectangle"):

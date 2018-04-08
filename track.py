@@ -1,6 +1,6 @@
 from lib.vision import Vision
 
-vision = Vision("signatures.txt")
+vision = Vision(open("signatures.txt", "r"))
 
 while True:
 	blocks = vision.get_color_info()
