@@ -16,17 +16,20 @@ class Vision(object):
 		(grabbed, frame) = self.camera.read()
 		result = []
 		frame = imutils.resize(frame, width=600)
-		blurred = cv2.GaussianBlur(frame, (11, 11), 0)
+		# blurred = cv2.GaussianBlur(frame, (11, 11), 0)
+		blurred = cv2.medianBlur(frame, 21)
+		cv2.imshow('blur', blurred)
 		for x in range(0, self.colors):
 			if not self.color_info[x]:
 				continue
 			lower = np.fromstring(self.color_info[x]['bounds'][0][1:-1], dtype=int, sep=' ')
 			upper = np.fromstring(self.color_info[x]['bounds'][1][1:-1], dtype=int, sep=' ')
+			print lower, upper
 			mask = cv2.inRange(blurred, lower, upper)
 			mask = cv2.erode(mask, None, iterations=2)
 			mask = cv2.dilate(mask, None, iterations=2)
 			contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
-
+			cv2.imshow(self.color_info[x]['color'], mask)
 			if len(contours) > 0:
 				if show_max:
 					contours = [max(contours, key=cv2.contourArea)]

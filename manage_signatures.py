@@ -26,7 +26,7 @@ while True:
 							  "1: Remove a signature,\n"
 							  "2: Rename a signature\n"
 							  "3: Change preferred shape of a signature\n"
-							  "4: Clear all signatures)"))
+							  "4: Clear all signatures)\n"))
 	if operation == 1:
 		sig_to_remove = raw_input("Which signature would you like to remove? \n(0 - 9)")
 		color_info[int(sig_to_remove)] = None

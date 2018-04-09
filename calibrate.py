@@ -79,6 +79,7 @@ def calibrate():
 	while True:
 		(grabbed, frame) = cap.read()
 		frame = imutils.resize(frame, width=600)
+		frame = cv2.medianBlur(frame, 11)
 		if not freezeFrame:
 			cv2.imshow('frame', frame)
 		if startPoint is True and endPoint is True:
