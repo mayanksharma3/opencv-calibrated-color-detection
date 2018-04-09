@@ -13,7 +13,8 @@ Tracks multiple colors based on colors you calibrate beforehand
 2. Select which signature you wish to calibrate the color against using the top bar (0-9)
 3. Hold the object/color in the frame and drag a square across an area where the main color is present
 4. Type in the label for that color in the terminal
-5. Repeat this for up to 10 colors, changing the signature location from the top bar every time
+5. Type in the preferred shape for the color to be detected with
+6. Repeat this for up to 10 colors, changing the signature location from the top bar every time
 
 _Note: Signature information is stored in 'signatures.txt'_
 
@@ -46,7 +47,6 @@ Arguments:
 Arguments:
  - show_feed - (optional, default: True) toggle for showing graphical feed or not
  - show_max - (optional, default: True) toggle for showing the biggest area of a color, or to show all the shapes with the color present
- - shape - (optional, default: "rectangle") which shape the contour of the color should be. _"circle" or "rectangle"_
 
 Return:
  - List of dicts of all the signatures seen in the frame
