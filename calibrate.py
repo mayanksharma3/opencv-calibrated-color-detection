@@ -95,7 +95,11 @@ def calibrate():
 					print "Not a valid response. Will take it as No."
 					break
 			name = raw_input("What do you want to name that? ")
-			previous[pos] = {"color": name, "bounds": [np.array_str(lower), np.array_str(upper)]}
+			shape = raw_input("What shape would you like to look for? ('circle' or 'rectangle') ")
+			if shape != "circle" and shape != "rectangle":
+				print "Not an option. Defaulting to rectangle"
+				shape = "rectangle"
+			previous[pos] = {"color": name, "bounds": [np.array_str(lower), np.array_str(upper)], "preferred_shape": shape}
 			sig_file = open("signatures.txt", "w")
 			sig_file.write(str(previous))
 			sig_file.close()

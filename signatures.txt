@@ -1,1 +1,1 @@
-[{'color': 'Blue', 'bounds': ['[33 22 16]', '[55 43 34]']}, None, None, None, None, None, None, None, None, None]
+[{'color': 'Blue', 'bounds': ['[33 10  6]', '[63 47 41]'], 'preferred_shape': 'rectangle'}, {'color': 'Red', 'bounds': ['[16 20 46]', '[25 38 87]'], 'preferred_shape': 'circle'}, None, None, None, None, None, None, None, None]

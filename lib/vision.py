@@ -12,7 +12,7 @@ class Vision(object):
 		self.color_info = ast.literal_eval(sig_file.readline())
 		self.colors = len(self.color_info)
 
-	def get_color_info(self, show_feed=True, show_max=True, shape="rectangle"):
+	def get_color_info(self, show_feed=True, show_max=True):
 		(grabbed, frame) = self.camera.read()
 		result = []
 		frame = imutils.resize(frame, width=600)
@@ -31,7 +31,7 @@ class Vision(object):
 				if show_max:
 					contours = [max(contours, key=cv2.contourArea)]
 				for c in contours:
-					if shape == "rectangle":
+					if self.color_info[x]['preferred_shape'] == "rectangle":
 						rect = cv2.minAreaRect(c)
 						box = cv2.boxPoints(rect)
 						box = np.int0(box)
@@ -46,7 +46,7 @@ class Vision(object):
 							cy = int(M['m01'] / M['m00'])
 							result.append(
 								{'area': cv2.contourArea(box), 'x': cx, 'y': cy, 'color': self.color_info[x]['color']})
-					elif shape == "circle":
+					else:
 						((ax, ay), radius) = cv2.minEnclosingCircle(c)
 						M = cv2.moments(c)
 						cx = int(M["m10"] / M["m00"])

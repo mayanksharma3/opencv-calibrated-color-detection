@@ -22,8 +22,11 @@ def write_to_sig_file(new_data):
 print "There are the signatures registered below:"
 print_colors()
 while True:
-	operation = int(raw_input(
-		"What would you like to do? \n(1: Remove a signature, 2: Rename a signature, 3: Clear all signatures)"))
+	operation = int(raw_input("What would you like to do? \n"
+							  "1: Remove a signature,\n"
+							  "2: Rename a signature\n"
+							  "3: Change preferred shape of a signature\n"
+							  "4: Clear all signatures)"))
 	if operation == 1:
 		sig_to_remove = raw_input("Which signature would you like to remove? \n(0 - 9)")
 		color_info[int(sig_to_remove)] = None
@@ -35,8 +38,20 @@ while True:
 				color_info[int(sig_to_rename)]["color"] = new_name
 				break
 			else:
-				print "That signature is empty"
+				print "This signature is empty"
 	elif operation == 3:
+		while True:
+			sig_to_rename = raw_input("Which signature would you like to change? \n(0 - 9)")
+			if color_info[int(sig_to_rename)] is not None:
+				new_shape = raw_input("Enter new shape ('circle or 'rectangle'): ")
+				if new_shape != "circle" and new_shape != "rectangle":
+					print "Not an option. Defaulting to rectangle"
+					new_shape = "rectangle"
+				color_info[int(sig_to_rename)]["preferred_shape"] = new_shape
+				break
+			else:
+				print "This signature is empty"
+	elif operation == 4:
 		while True:
 			check_for_removal = raw_input("Are you sure you want to remove all the signatures? (Y/N) ")
 			if check_for_removal == "Y":
