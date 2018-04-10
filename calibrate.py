@@ -47,9 +47,9 @@ def on_mouse(event, x, y, flags, params):
 					lum_upper = 0.2126 * upper[2] + 0.7152 * upper[1] + 0.0722 * upper[0]
 					lum_pix = (0.2126 * pix[2] + 0.7152 * pix[1] + 0.0722 * pix[0])
 					if lum_pix < lum_lower:
-						lower = pix
+						lower = pix - 10
 					elif lum_pix > lum_upper:
-						upper = pix
+						upper = pix + 10
 			endPoint = True
 			print "Bounds Found!"
 
@@ -79,9 +79,10 @@ def calibrate():
 	while True:
 		(grabbed, frame) = cap.read()
 		frame = imutils.resize(frame, width=600)
-		frame = cv2.medianBlur(frame, 11)
+		frame_to_show = frame.copy()
+		frame = cv2.medianBlur(frame, 15)
 		if not freezeFrame:
-			cv2.imshow('frame', frame)
+			cv2.imshow('frame', frame_to_show)
 		if startPoint is True and endPoint is True:
 			pos = cv2.getTrackbarPos('Signature', 'frame')
 			cv2.destroyAllWindows()

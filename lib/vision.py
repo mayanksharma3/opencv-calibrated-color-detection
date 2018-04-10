@@ -16,15 +16,14 @@ class Vision(object):
 		(grabbed, frame) = self.camera.read()
 		result = []
 		frame = imutils.resize(frame, width=600)
-		# blurred = cv2.GaussianBlur(frame, (11, 11), 0)
-		blurred = cv2.medianBlur(frame, 21)
+		blurred = cv2.GaussianBlur(frame, (11, 11), 0)
+		blurred = cv2.medianBlur(blurred, 21)
 		cv2.imshow('blur', blurred)
 		for x in range(0, self.colors):
 			if not self.color_info[x]:
 				continue
 			lower = np.fromstring(self.color_info[x]['bounds'][0][1:-1], dtype=int, sep=' ')
 			upper = np.fromstring(self.color_info[x]['bounds'][1][1:-1], dtype=int, sep=' ')
-			print lower, upper
 			mask = cv2.inRange(blurred, lower, upper)
 			mask = cv2.erode(mask, None, iterations=2)
 			mask = cv2.dilate(mask, None, iterations=2)
@@ -38,7 +37,7 @@ class Vision(object):
 						rect = cv2.minAreaRect(c)
 						box = cv2.boxPoints(rect)
 						box = np.int0(box)
-						if cv2.contourArea(box) > 5000:
+						if cv2.contourArea(box) > 1000:
 							cv2.drawContours(frame, [box], 0, (0, 0, 255), 2)
 							font = cv2.QT_FONT_NORMAL
 							cv2.putText(frame, self.color_info[x]['color'], (box[1][0], box[1][1]), font, 0.5,
@@ -55,7 +54,7 @@ class Vision(object):
 						cx = int(M["m10"] / M["m00"])
 						cy = int(M["m01"] / M["m00"])
 						area = pi * radius ** 2
-						if area > 5000:
+						if area > 1000:
 							cv2.circle(frame, (int(ax), int(ay)), int(radius), (0, 0, 255), 2)
 							font = cv2.QT_FONT_NORMAL
 							cv2.putText(frame, self.color_info[x]['color'], (int(ax), int(ay)), font, 0.5,
