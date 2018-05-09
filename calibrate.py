@@ -1,7 +1,9 @@
 import numpy as np
 import cv2
 import ast
+from imutils.video import VideoStream
 import imutils
+from pylab import array, uint8
 
 rect = (0, 0, 0, 0)
 startPoint = False
@@ -67,22 +69,32 @@ def print_colors():
 			print "%s: Empty" % x
 
 
-cap = cv2.VideoCapture(0)
+vs = VideoStream(0).start()
 print_colors()
 
 
 def calibrate():
 	cv2.namedWindow('frame')
-	cv2.setMouseCallback('frame', on_mouse)
 	cv2.createTrackbar('Signature', 'frame', 0, 10, nothing)
+	cv2.createTrackbar('phi', 'frame', 1, 10, nothing)
+	cv2.createTrackbar('theta', 'frame', 1, 10, nothing)
+	cv2.setMouseCallback('frame', on_mouse)
 	global startPoint, endPoint, frame
 	while True:
-		(grabbed, frame) = cap.read()
-		frame = imutils.resize(frame, width=600)
+		# grab the frame from the threaded video stream and resize it
+		# to have a maximum width of 400 pixels
+		frame = vs.read()
+		frame = imutils.resize(frame, width=400)
 		frame_to_show = frame.copy()
-		frame = cv2.medianBlur(frame, 15)
+		max_intensity = 255.0  # depends on dtype of image data
+		phi = float(cv2.getTrackbarPos('phi', 'frame') + 1/10)
+		theta = float(cv2.getTrackbarPos('theta', 'frame') + 1/10)
+		frame = (max_intensity / phi) * (frame / (max_intensity / theta)) ** 2
+		frame = array(frame, dtype=uint8)
+		frame = cv2.medianBlur(frame, 5)
 		if not freezeFrame:
-			cv2.imshow('frame', frame_to_show)
+			cv2.imshow('frame1', frame_to_show)
+			cv2.imshow('frame', frame)
 		if startPoint is True and endPoint is True:
 			pos = cv2.getTrackbarPos('Signature', 'frame')
 			cv2.destroyAllWindows()
@@ -101,7 +113,8 @@ def calibrate():
 			if shape != "circle" and shape != "rectangle":
 				print "Not an option. Defaulting to rectangle"
 				shape = "rectangle"
-			previous[pos] = {"color": name, "bounds": [np.array_str(lower), np.array_str(upper)], "preferred_shape": shape}
+			previous[pos] = {"color": name, "bounds": [np.array_str(lower), np.array_str(upper)],
+							 "preferred_shape": shape}
 			sig_file = open("signatures.txt", "w")
 			sig_file.write(str(previous))
 			sig_file.close()

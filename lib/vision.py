@@ -1,24 +1,32 @@
 from math import pi
 
 import numpy as np
-import imutils
 import cv2
 import ast
+from imutils.video import VideoStream
+import imutils
+from pylab import array, uint8
 
 
 class Vision(object):
 	def __init__(self, sig_file, camera_index=0):
-		self.camera = cv2.VideoCapture(camera_index)
+		self.camera = VideoStream(0).start()
 		self.color_info = ast.literal_eval(sig_file.readline())
 		self.colors = len(self.color_info)
 
 	def get_color_info(self, show_feed=True, show_max=True):
-		(grabbed, frame) = self.camera.read()
+		frame = self.camera.read()
+		frame = imutils.resize(frame, width=400)
 		result = []
-		frame = imutils.resize(frame, width=600)
-		blurred = cv2.GaussianBlur(frame, (11, 11), 0)
-		blurred = cv2.medianBlur(blurred, 21)
-		cv2.imshow('blur', blurred)
+		image = frame
+		max_intensity = 255.0  # depends on dtype of image data
+		phi = 1
+		theta = 1
+		newImage1 = (max_intensity / phi) * (image / (max_intensity / theta)) ** 2
+		newImage1 = array(newImage1, dtype=uint8)
+		blurred = cv2.GaussianBlur(newImage1, (11, 11), 0)
+		frame = newImage1
+
 		for x in range(0, self.colors):
 			if not self.color_info[x]:
 				continue
@@ -28,7 +36,7 @@ class Vision(object):
 			mask = cv2.erode(mask, None, iterations=2)
 			mask = cv2.dilate(mask, None, iterations=2)
 			contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
-			cv2.imshow(self.color_info[x]['color'], mask)
+			# cv2.imshow(self.color_info[x]['color'], mask)
 			if len(contours) > 0:
 				if show_max:
 					contours = [max(contours, key=cv2.contourArea)]
@@ -37,7 +45,7 @@ class Vision(object):
 						rect = cv2.minAreaRect(c)
 						box = cv2.boxPoints(rect)
 						box = np.int0(box)
-						if cv2.contourArea(box) > 1000:
+						if cv2.contourArea(box) > 3000:
 							cv2.drawContours(frame, [box], 0, (0, 0, 255), 2)
 							font = cv2.QT_FONT_NORMAL
 							cv2.putText(frame, self.color_info[x]['color'], (box[1][0], box[1][1]), font, 0.5,
@@ -54,7 +62,7 @@ class Vision(object):
 						cx = int(M["m10"] / M["m00"])
 						cy = int(M["m01"] / M["m00"])
 						area = pi * radius ** 2
-						if area > 1000:
+						if area > 3000:
 							cv2.circle(frame, (int(ax), int(ay)), int(radius), (0, 0, 255), 2)
 							font = cv2.QT_FONT_NORMAL
 							cv2.putText(frame, self.color_info[x]['color'], (int(ax), int(ay)), font, 0.5,
